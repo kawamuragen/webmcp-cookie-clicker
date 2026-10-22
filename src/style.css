@@ -33,6 +33,21 @@
   }
 }
 
+/* 埋め込み先がテーマを明示した場合（data-theme）にも従う */
+:root[data-theme='dark'] {
+  --bg: #17120e;
+  --surface: #211a14;
+  --surface-2: #2a2119;
+  --text: #f1e7da;
+  --muted: #a8977f;
+  --border: #3a2e23;
+  --accent: #e08a3c;
+  --accent-ink: #1b130c;
+  --code-bg: #2c231b;
+  --shadow: none;
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
 }

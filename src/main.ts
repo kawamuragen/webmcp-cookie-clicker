@@ -160,8 +160,18 @@ devMode.addEventListener('change', () => {
   game.state.devMode = devMode.checked;
 });
 
-$('reset').addEventListener('click', () => {
-  if (!confirm('セーブデータを消して最初からやり直しますか？')) return;
+// confirm() はブラウザ埋め込み環境で使えないことがあるので、2回押しで確定する
+const resetButton = $<HTMLButtonElement>('reset');
+let resetArmedUntil = 0;
+resetButton.addEventListener('click', () => {
+  if (Date.now() > resetArmedUntil) {
+    resetArmedUntil = Date.now() + 4_000;
+    resetButton.textContent = 'もう一度押すと消去';
+    setTimeout(() => {
+      if (Date.now() >= resetArmedUntil) resetButton.textContent = 'リセット';
+    }, 4_000);
+    return;
+  }
   window.removeEventListener('beforeunload', save);
   clearSavedState();
   location.reload();
