@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍪</text></svg>" />
+    <title>WebMCP Cookie Clicker</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>🍪 WebMCP Cookie Clicker</h1>
+      <div class="goal">
+        <div class="goal-label">ゴール: 累計100万枚 <span id="goal-text"></span></div>
+        <div class="bar"><div id="goal-bar"></div></div>
+      </div>
+      <div class="timer" title="プレイ時間">⏱ <span id="play-time">00:00</span></div>
+      <div id="webmcp-badge" class="badge"></div>
+      <button id="reset" class="ghost" type="button">リセット</button>
+    </header>
+
+    <main class="layout">
+      <!-- 人間の仕事 -->
+      <section class="col col-human" aria-labelledby="h-human">
+        <h2 id="h-human">🧑 人間の仕事 <small>クリック・権限委譲・承認</small></h2>
+
+        <div class="bank">
+          <div class="bank-cookies"><span id="cookies">0</span> 枚</div>
+          <div class="bank-sub">毎秒 <span id="cps">0</span> 枚 ・ 1クリック <span id="click-power">1</span> 枚</div>
+          <div id="effects" class="effects"></div>
+        </div>
+
+        <div class="cookie-stage">
+          <button id="big-cookie" class="big-cookie" type="button" aria-label="クッキーを焼く">🍪</button>
+        </div>
+        <p class="hint">エージェントにクリック用ツールはありません。焼くのはあなたの仕事です。</p>
+
+        <div id="approvals" class="approvals" aria-live="polite"></div>
+
+        <h3>🔑 権限委譲 <small>どのツールをエージェントに公開するか</small></h3>
+        <ul id="grants" class="grants"></ul>
+
+        <label class="limit">
+          📝 決裁上限
+          <select id="approval-limit"></select>
+          <small>これを超える購入は、あなたの承認が必要</small>
+        </label>
+      </section>
+
+      <!-- 工場（エージェントが経営） -->
+      <section class="col col-company" aria-labelledby="h-company">
+        <h2 id="h-company">🏭 工場 <small>経営はエージェントの担当</small></h2>
+        <div class="ticker" aria-live="off"><span class="ticker-label">NEWS</span><span id="ticker-text"></span></div>
+
+        <h3>施設</h3>
+        <table class="buildings">
+          <thead><tr><th>施設</th><th class="num">保有</th><th class="num">価格</th><th class="num">生産/秒</th></tr></thead>
+          <tbody id="buildings"></tbody>
+        </table>
+
+        <div id="research" class="research"></div>
+
+        <h3>アップグレード</h3>
+        <ul id="upgrades" class="upgrades"></ul>
+
+        <h3>成績</h3>
+        <dl id="stats" class="stats"></dl>
+      </section>
+
+      <!-- エージェント -->
+      <aside class="col col-agent" aria-labelledby="h-agent">
+        <h2 id="h-agent">🤖 エージェント <small>WebMCP で公開中のツールと呼び出しログ</small></h2>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>公開中のツール <span id="tool-count" class="pill"></span></h3>
+            <span class="muted">toolchange ×<span id="toolchange-count">0</span></span>
+          </div>
+          <ul id="tools" class="tools"></ul>
+        </div>
+
+        <div class="panel panel-log">
+          <div class="panel-head">
+            <h3>エージェントログ</h3>
+            <div class="filters">
+              <label><input type="checkbox" data-filter="call" checked /> 呼び出し</label>
+              <label><input type="checkbox" data-filter="tool" checked /> 登録変化</label>
+              <label><input type="checkbox" data-filter="game" checked /> ゲーム</label>
+              <button id="clear-log" class="ghost small" type="button">クリア</button>
+            </div>
+          </div>
+          <ol id="log" class="log"></ol>
+        </div>
+
+        <details class="panel" id="manual-panel">
+          <summary><h3>🛠 手動オペレーション <small>エージェントの代わりにツールを叩く</small></h3></summary>
+          <p class="muted">ここからの呼び出しも <code>getTools()</code> → <code>executeTool()</code> を通ります（WebMCP 非対応ブラウザではアプリ内 shim）。</p>
+          <form id="manual-form" class="manual">
+            <label>ツール <select id="manual-tool"></select></label>
+            <pre id="manual-desc" class="manual-desc"></pre>
+            <label>入力（JSON）<textarea id="manual-input" rows="4" spellcheck="false"></textarea></label>
+            <button type="submit">実行</button>
+            <pre id="manual-result" class="manual-result"></pre>
+          </form>
+          <div class="toggles">
+            <label><input type="checkbox" id="autopilot" /> 🦾 オートパイロット（ルールベースの in-page エージェント）</label>
+            <label><input type="checkbox" id="autopilot-naive" /> 😇 ナイーブ（ニュース本文の指示を鵜呑みにする）</label>
+            <label><input type="checkbox" id="dev-mode" /> 🧪 開発者モード（<code>debugging</code> ツールを公開）</label>
+          </div>
+        </details>
+      </aside>
+    </main>
+
+    <div id="golden-layer" class="golden-layer"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
